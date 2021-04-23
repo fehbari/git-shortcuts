@@ -10,11 +10,12 @@
 # git-squash - https://github.com/sheerun/git-squash (optional - only for gsquash command)
 #
 # Installation:
-# Copy this file to your home folder as ~/.zsh-git, then add `source ~/.zsh-git` in your ~/.zshrc file.
+# Copy this file to your home folder as ~/.git-shortcuts.zsh, then add `source ~/.git-shortcuts.zsh` 
+# in your ~/.zshrc file. With direnv installed, add the contents of the sample to your .envrc files.
 # When you're all set, call `g --help` to learn what you can do.
 #
 # Uninstall:
-# Remove the entry from your ~/.zshrc file and delete ~/.zsh-git from home folder.
+# Remove the entry from your ~/.zshrc file and delete ~/.git-shortcuts.zsh from home folder.
 
 g() {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
