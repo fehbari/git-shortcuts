@@ -30,6 +30,7 @@ g() {
         echo "gmerge | Merge latest from $BASE_BRANCH into the active branch."
         echo "gpull | git pull but shorter :)"
         echo "gpush [-f] | Push changes from active branch and track remote."
+        echo "grebase [-a -c -s] | Rebase current branch onto $BASE_BRANCH."
         echo "gsquash | Use git-squash to squash commits and sync with $BASE_BRANCH."
         echo "gtrack | Sets the upstream of branch to origin/branch."
         echo "\nUse -h or --help with any command to see argument details."
@@ -150,6 +151,24 @@ gpush() {
     else
         eval "git push origin HEAD && gtrack"
     fi   
+}
+
+grebase() {
+    if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+        echo "\ngrebase [-a -c -s] | Rebase current branch onto $BASE_BRANCH."
+        echo "\nAvailable arguments:\n"
+        echo "-a --abort | Undo rebase with conflicts."
+        echo "-c --continue | Continue rebase after fixing conflicts."
+        echo "-s --skip | Skip the current patch with conflicts."
+    elif [ "$1" = "-a" ] || [ "$1" = "--abort" ]; then
+        eval "git rebase --abort"
+    elif [ "$1" = "-c" ] || [ "$1" = "--continue" ]; then
+        eval "git rebase --continue"
+    elif [ "$1" = "-s" ] || [ "$1" = "--skip" ]; then
+        eval "git rebase --skip"
+    else
+        eval "git rebase $BASE_BRANCH"
+    fi
 }
 
 gsquash() {
