@@ -4,6 +4,8 @@
 # Use `g --help` to learn what you can do.
 
 g() {
+    version="1.3"
+    
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
         echo "\nCollection of useful Git shortcuts.\n"
         echo "Available commands:\n"
@@ -20,6 +22,12 @@ g() {
         echo "gsquash | Use git-squash to squash commits and sync with $(_g_base_branch)."
         echo "gtrack | Set the upstream of branch to origin/branch."
         echo "\nUse -h or --help with any command to see argument details."
+    elif [ "$1" = "-u" ] || [ "$1" = "--update" ]; then
+        eval "curl https://raw.githubusercontent.com/fehbari/git-shortcuts/release/src/git-shortcuts.zsh -o ~/.git-shortcuts.zsh"
+        eval "source ~/.zshrc"
+        echo "\nUpdated to latest version https://github.com/fehbari/git-shortcuts/releases/latest"
+    elif [ "$1" = "-v" ] || [ "$1" = "--version" ]; then
+        echo "git-shorcuts v$version"
     else
         echo "Collection of useful Git shortcuts to call from Zsh."
         echo "Use -h or --help for the list of commands."

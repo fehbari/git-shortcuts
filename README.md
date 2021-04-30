@@ -14,7 +14,7 @@ These shortcuts were created to help my workflow. Most of them chain multiple Gi
 
 # Installation
 
-Download the [latest release](https://github.com/fehbari/git-shortcuts/releases/latest) and follow the instructions in that page.
+Install the [latest release](https://github.com/fehbari/git-shortcuts/releases/latest) by following the instructions in that page.
 
 # Cheatsheet
 
