@@ -1,6 +1,0 @@
-# Use with direnv - https://github.com/direnv/direnv
-# Have a file like this named .envrc in each one of your repos with the below variable set.
-# Alternatively, you can set a global variable in ~/.zshrc, but that won't work so well
-# since each repo has a different base development branch.
-
-export BASE_BRANCH="master"

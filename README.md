@@ -77,8 +77,8 @@ Option                 | Description
 ---------------------- | -----------
 `-n --new`             | Create and switch to a new branch, based on the latest base branch.
 `-n -p --new --parent` | Create and switch to a new branch, based on the current branch (parent).
-`-t --track`           | Check out and track a remote branch locally.
-`-c --clean`           | Cleanup. Deletes all local branches except for base branch. </br> **Dangerous operation**, requires confirmation *(y/n)*
+`-d --delete`          | Delete a local branch.
+`-c --clean`           | Cleanup. Delete all local branches except for base branch. </br> **Dangerous operation**, requires confirmation *(y/n)*
 
 ---
 

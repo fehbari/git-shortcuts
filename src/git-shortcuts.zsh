@@ -8,16 +8,16 @@ g() {
         echo "\nCollection of useful Git shortcuts.\n"
         echo "Available commands:\n"
         echo "gadd | Stage all new and changed files."
-        echo "gbase [-s] | Switch to $BASE_BRANCH and optionally sync with remote."
+        echo "gbase [-s] | Switch to $(_g_base_branch) and optionally sync with remote."
         echo "gbranch [-n -p -d -c] | Switch to or perform actions on your branches."
         echo "gcommit | Stage all changes and commit work with a message."
         echo "gdiff | List all staged and unstaged changes."
         echo "gfetch | Fetch branches and tags, and remove outdated local references."
-        echo "gmerge | Merge latest from $BASE_BRANCH into the active branch."
+        echo "gmerge | Merge latest from $(_g_base_branch) into the active branch."
         echo "gpull | git pull but shorter :)"
         echo "gpush [-f] | Push changes from active branch and track remote."
-        echo "grebase [-a -c -s] | Rebase current branch onto $BASE_BRANCH."
-        echo "gsquash | Use git-squash to squash commits and sync with $BASE_BRANCH."
+        echo "grebase [-a -c -s] | Rebase current branch onto $(_g_base_branch)."
+        echo "gsquash | Use git-squash to squash commits and sync with $(_g_base_branch)."
         echo "gtrack | Set the upstream of branch to origin/branch."
         echo "\nUse -h or --help with any command to see argument details."
     else
@@ -36,13 +36,13 @@ gadd() {
 
 gbase() {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-        echo "\ngbase [-s] | Switch to $BASE_BRANCH and optionally sync with remote."
+        echo "\ngbase [-s] | Switch to $(_g_base_branch) and optionally sync with remote."
         echo "\nAvailable options:\n"
-        echo "-s --sync | Sync with latest changes from origin/$BASE_BRANCH."
+        echo "-s --sync | Sync with latest changes from origin/$(_g_base_branch)."
     elif [ "$1" = "-s" ] || [ "$1" = "--sync" ]; then
-        eval "git checkout $BASE_BRANCH && git pull"
+        eval "git checkout $(_g_base_branch) && git pull"
     else
-        eval "git checkout $BASE_BRANCH"
+        eval "git checkout $(_g_base_branch)"
     fi
 }
 
@@ -51,10 +51,10 @@ gbranch() {
         echo "\ngbranch [-n -p -d -c] | Switch to or perform actions on your branches."
         echo "\nBasic use: gbranch your/branch-name | Switch to local your/branch-name."
         echo "\nAvailable options:\n"
-        echo "-n --new | Create and switch to a new branch, based on the latest $BASE_BRANCH."
+        echo "-n --new | Create and switch to a new branch, based on the latest $(_g_base_branch)."
         echo "-n -p --new --parent | Create and switch to a new branch, based on the current branch (parent)."
-        echo "-t --track | Check out and track a remote branch locally."
-        echo "-c --clean | Cleanup. Deletes all local branches except for $BASE_BRANCH."
+        echo "-d --delete | Delete a local branch."
+        echo "-c --clean | Cleanup. Delete all local branches except for $(_g_base_branch)."
         echo "             Dangerous operation, requires confirmation (y/n)"
         echo "\nUsage: gbranch [--options] your/branch-name"
     elif [ "$1" = "-n" ] || [ "$1" = "--new" ]; then
@@ -63,14 +63,12 @@ gbranch() {
         else
             eval "gbase -s && git checkout -b $2"
         fi
-    elif [ "$1" = "-t" ] || [ "$1" = "--track" ]; then
-        eval "git checkout -t origin/$2"
     elif [ "$1" = "-d" ] || [ "$1" = "--delete" ]; then
         eval "git branch -D $2"
     elif [ "$1" = "-c" ] || [ "$1" = "--clean" ]; then
-        echo "This will delete all local branches except $BASE_BRANCH. \nProceed? (y/n)"; read input;
+        echo "This will delete all local branches except $(_g_base_branch). \nProceed? (y/n)"; read input;
         if [ $input = "y" ]; then
-            eval "git branch | grep -v "$BASE_BRANCH" | xargs git branch -D"
+            eval "git branch | grep -v "$(_g_base_branch)" | xargs git branch -D"
         else
             echo "Mission aborted!";
         fi
@@ -107,9 +105,9 @@ gfetch() {
 
 gmerge() {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-        echo "\ngmerge | Merge latest from $BASE_BRANCH into the active branch."
+        echo "\ngmerge | Merge latest from $(_g_base_branch) into the active branch."
     else
-        eval "git merge origin/$BASE_BRANCH"
+        eval "git merge origin/$(_g_base_branch)"
     fi
 }
 
@@ -141,7 +139,7 @@ gpush() {
 
 grebase() {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-        echo "\ngrebase [-a -c -s] | Rebase current branch onto $BASE_BRANCH."
+        echo "\ngrebase [-a -c -s] | Rebase current branch onto $(_g_base_branch)."
         echo "\nAvailable options:\n"
         echo "-a --abort | Undo rebase with conflicts."
         echo "-c --continue | Continue rebase after fixing conflicts."
@@ -153,15 +151,15 @@ grebase() {
     elif [ "$1" = "-s" ] || [ "$1" = "--skip" ]; then
         eval "git rebase --skip"
     else
-        eval "git rebase $BASE_BRANCH"
+        eval "git rebase $(_g_base_branch)"
     fi
 }
 
 gsquash() {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-        echo "\ngsquash | Use git-squash to squash commits and sync with $BASE_BRANCH."
+        echo "\ngsquash | Use git-squash to squash commits and sync with $(_g_base_branch)."
     else
-        eval "git merge origin/$BASE_BRANCH && git squash origin/$BASE_BRANCH"
+        eval "git merge origin/$(_g_base_branch) && git squash origin/$(_g_base_branch)"
     fi
 }
 
@@ -172,4 +170,16 @@ gtrack() {
         branch=$(git symbolic-ref --short HEAD)
         eval "git branch --set-upstream-to origin/$branch"
     fi
+}
+
+_g_base_branch() {
+    candidates=(dev develop development main master)
+    for branch in $candidates
+    do
+        exists=$(git branch -a | grep "\b${branch}$")
+        if [ -n "$exists" ]; then
+            echo $branch
+            break
+        fi
+    done
 }
